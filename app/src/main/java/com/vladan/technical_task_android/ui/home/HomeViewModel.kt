@@ -1,18 +1,35 @@
 package com.vladan.technical_task_android.ui.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.vladan.technical_task_android.model.Gender
-import com.vladan.technical_task_android.model.User
-import com.vladan.technical_task_android.model.UserStatus
+import androidx.lifecycle.viewModelScope
+import com.vladan.technical_task_android.repository.UserRepository
+import com.vladan.technical_task_android.util.retrofit_resource.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
 
-    val usermock = listOf(
-        User(1, "ime", "email", Gender.FEMALE, UserStatus.ACTIVE),
-        User(2, "asdfas", "email", Gender.FEMALE, UserStatus.ACTIVE),
-        User(3, "imafsdfasdfe", "email", Gender.FEMALE, UserStatus.ACTIVE),
-        User(4, "fasdfas", "email", Gender.FEMALE, UserStatus.ACTIVE),
-        User(5, "asdfa", "email", Gender.FEMALE, UserStatus.ACTIVE),
-        User(6, "aaaa", "email", Gender.FEMALE, UserStatus.ACTIVE),
-    )
+    private val _uiState = mutableStateOf(HomeUIState())
+    val uiState: State<HomeUIState> = _uiState
+
+    init {
+        userRepository.users.apply {
+            viewModelScope.launch {
+                flow.onEach {
+                    when (it.status) {
+                        Status.SUCCESS -> _uiState.value = _uiState.value.copy(users = it.data ?: emptyList(), requestInProgress = false)
+                        Status.ERROR -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.LOADING -> _uiState.value = _uiState.value.copy(requestInProgress = true)
+                    }
+                }.launchIn(this)
+                run()
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.vladan.technical_task_android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
@@ -17,6 +18,7 @@ import com.vladan.technical_task_android.ui.home.Home
 import com.vladan.technical_task_android.ui.theme.TechnicalTaskAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
@@ -29,9 +31,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Scaffold(backgroundColor = Color.Transparent) { innerPadding ->
                     NavHost(navController, startDestination = NavigationScreen.HomeScreen.route, Modifier.padding(innerPadding)) {
-                        composable(NavigationScreen.HomeScreen.route) {
-                            Home()
-                        }
+                        composable(NavigationScreen.HomeScreen.route) { Home() }
                     }
                 }
             }

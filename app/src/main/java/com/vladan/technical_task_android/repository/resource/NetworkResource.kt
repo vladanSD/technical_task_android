@@ -9,8 +9,7 @@ import java.util.*
 open class NetworkResource<T>(
     private val retrofit: Retrofit,
     fetch: (suspend (AbstractNetworkResource<T, Error>) -> T)? = null
-) :
-    AbstractNetworkResource<T, Error>(fetch) {
+) : AbstractNetworkResource<T, Error>(fetch) {
 
     override fun getError(errorBody: ResponseBody): Error? {
         return try {
