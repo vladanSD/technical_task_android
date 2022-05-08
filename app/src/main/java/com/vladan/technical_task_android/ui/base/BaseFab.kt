@@ -12,7 +12,6 @@ import com.vladan.technical_task_android.ui.theme.primaryColor
 @ExperimentalComposeUiApi
 @Composable
 fun BaseFab(onClick: () -> Unit) {
-
     FloatingActionButton(
         onClick = { onClick() },
         backgroundColor = primaryColor

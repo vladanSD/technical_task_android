@@ -25,6 +25,9 @@ open class NetworkResource<T>(
     override suspend fun headers() = mutableMapOf<String, String>().apply {
         this["Accept"] = "application/json"
         this["Accept-Language"] = Locale.getDefault().language
+        //hardcoded token since there is no auth logic
+        //otherwise prefs (for holding token/refresh_token) and authenticator (for refreshing token) should be implemented
+        this["Authorization"] = "Bearer 9b08361b7744bb68c04338a4ec58e5ecc02f4395cbfb6f1d5ada7b3f24d494a8"
     }
 
 }

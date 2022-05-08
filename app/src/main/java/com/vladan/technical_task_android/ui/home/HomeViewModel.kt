@@ -13,10 +13,33 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     private val _uiState = mutableStateOf(HomeUIState())
     val uiState: State<HomeUIState> = _uiState
+
+    fun onEvent(event: HomeScreenEvent) {
+        when (event) {
+            is HomeScreenEvent.DeleteUser -> {
+                deleteUser(event.id)
+            }
+        }
+    }
+
+    private fun deleteUser(id: Int) {
+        userRepository.deleteUser(id).apply {
+            viewModelScope.launch {
+                flow.onEach {
+                    when (it.status) {
+                        Status.SUCCESS -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.ERROR -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.LOADING -> _uiState.value = _uiState.value.copy(requestInProgress = true)
+                    }
+                }.launchIn(this)
+                run()
+            }
+        }
+    }
 
     init {
         userRepository.users.apply {
@@ -32,4 +55,8 @@ class HomeViewModel @Inject constructor(userRepository: UserRepository) : ViewMo
             }
         }
     }
+}
+
+sealed class HomeScreenEvent {
+    data class DeleteUser(val id: Int) : HomeScreenEvent()
 }
