@@ -1,5 +1,6 @@
 package com.vladan.technical_task_android.repository.resource
 
+import com.vladan.technical_task_android.model.Error
 import com.vladan.technical_task_android.util.retrofit_resource.AbstractNetworkResource
 import okhttp3.ResponseBody
 import retrofit2.Retrofit
