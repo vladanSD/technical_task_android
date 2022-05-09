@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vladan.technical_task_android.R
+import com.vladan.technical_task_android.ui.theme.grayColor
 import com.vladan.technical_task_android.ui.theme.primaryColor
 
 @ExperimentalComposeUiApi
@@ -80,7 +81,8 @@ fun BaseCreateUserDialog(
     emailValue: String,
     onEmailChange: (String) -> Unit,
     nameError: String?,
-    emailError: String?
+    emailError: String?,
+    disabledPositiveButton: Boolean
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -130,8 +132,9 @@ fun BaseCreateUserDialog(
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp)
-                        .background(color = primaryColor),
-                    style = MaterialTheme.typography.body1.copy(color = Color.White)
+                        .background(color = if (!disabledPositiveButton) primaryColor else grayColor),
+                    style = MaterialTheme.typography.body1.copy(color = Color.White),
+                    disabled = disabledPositiveButton
                 )
             }
         }

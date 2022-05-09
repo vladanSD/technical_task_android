@@ -40,8 +40,8 @@ fun Home(
     val createUserDialog: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(context) {
-        vm.validationEvents.collect {
-            if (it is Validation.Success) {
+        vm.userCreationEvents.collect {
+            if (it is UserCreation.Success) {
                 createUserDialog.value = false
             }
         }
@@ -96,7 +96,8 @@ fun Home(
             emailValue = state.userEmail,
             onEmailChange = { vm.onEvent(HomeScreenEvent.TypeEmail(it)) },
             nameError = state.userNameErrorMessage?.asString(),
-            emailError = state.userEmailErrorMessage?.asString()
+            emailError = state.userEmailErrorMessage?.asString(),
+            disabledPositiveButton = state.requestInProgress
         )
     }
 }

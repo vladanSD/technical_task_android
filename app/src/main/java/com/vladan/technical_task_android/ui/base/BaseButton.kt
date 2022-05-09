@@ -12,7 +12,7 @@ import androidx.compose.ui.text.TextStyle
 
 @ExperimentalComposeUiApi
 @Composable
-fun BaseTextButton(onClick: () -> Unit, text: String, style: TextStyle? = null, modifier: Modifier = Modifier) {
+fun BaseTextButton(onClick: () -> Unit, text: String, style: TextStyle? = null, modifier: Modifier = Modifier, disabled: Boolean = false) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     TextButton(
@@ -22,7 +22,8 @@ fun BaseTextButton(onClick: () -> Unit, text: String, style: TextStyle? = null, 
                 keyboardController?.hide()
             }
         },
-        modifier = modifier
+        modifier = modifier,
+        enabled = !disabled
     ) {
         Text(
             text,

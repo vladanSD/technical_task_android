@@ -30,8 +30,8 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
     private val _uiState = mutableStateOf(HomeUIState())
     val uiState: State<HomeUIState> = _uiState
 
-    private val _validationEventChannel = Channel<Validation>()
-    val validationEvents = _validationEventChannel.receiveAsFlow()
+    private val _userCreationEventChannel = Channel<UserCreation>()
+    val userCreationEvents = _userCreationEventChannel.receiveAsFlow()
 
     private val _toastChannel = Channel<UiString>()
     val toastEvents = _toastChannel.receiveAsFlow()
@@ -65,10 +65,6 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
                 _uiState.value = _uiState.value.copy(userNameErrorMessage = nameResult.errorMessage, userEmailErrorMessage = emailResult.errorMessage)
                 return
             }
-        }
-
-        viewModelScope.launch {
-            _validationEventChannel.send(Validation.Success)
         }
 
         createUser()
@@ -109,7 +105,10 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
             viewModelScope.launch {
                 flow.onEach {
                     when (it.status) {
-                        Status.SUCCESS -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.SUCCESS -> {
+                            _uiState.value = _uiState.value.copy(requestInProgress = false)
+                            _userCreationEventChannel.send(UserCreation.Success)
+                        }
                         Status.ERROR -> {
                             //mapping fields with errors
                             var nameError: UiString? = null
@@ -165,8 +164,8 @@ sealed class HomeScreenEvent {
     object ValidateAndCreate : HomeScreenEvent()
 }
 
-sealed class Validation {
-    object Success : Validation()
+sealed class UserCreation {
+    object Success : UserCreation()
 }
 
 //TODO erori / unit testovi / internet konekcija / animacija za skrol
