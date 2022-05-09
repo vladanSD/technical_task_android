@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Technical Task Android</string>
+    <string name="home_screen_title">Home Screen</string>
+    <string name="dialog_delete_user_title">Delete User</string>
+    <string name="delete_user_dialog_text">Are you sure you want to delete this user?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="name_label">Name</string>
+    <string name="email_label">Email</string>
+    <string name="create_user_dialog_title">Create User</string>
+    <string name="create">Create</string>
+    <string name="email_blank_error">The email can\'t be blank</string>
+    <string name="email_valid_error">Not a valid email</string>
+    <string name="name_blank_error">The name can\'t be blank</string>
+    <string name="name_valid_error">Name must contain at least 2 char</string>
+</resources>
