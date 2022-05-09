@@ -164,8 +164,7 @@ sealed class HomeScreenEvent {
     object ValidateAndCreate : HomeScreenEvent()
 }
 
+//used for dismissing dialog after success
 sealed class UserCreation {
     object Success : UserCreation()
 }
-
-//TODO erori / unit testovi / internet konekcija / animacija za skrol
