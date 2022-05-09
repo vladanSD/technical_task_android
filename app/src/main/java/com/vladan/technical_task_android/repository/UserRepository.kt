@@ -1,6 +1,7 @@
 package com.vladan.technical_task_android.repository
 
 import com.vladan.technical_task_android.model.User
+import com.vladan.technical_task_android.model.UserRequest
 import com.vladan.technical_task_android.repository.resource.NetworkResource
 import retrofit2.HttpException
 import retrofit2.Retrofit
@@ -9,6 +10,18 @@ class UserRepository(private val retrofit: Retrofit, private val api: ApiService
 
     val users = NetworkResource<List<User>>(retrofit) {
         api.getUsers(it.headers())
+    }
+
+    fun createUser(userRequest: UserRequest) = NetworkResource<User>(retrofit) {
+        api.createUser(it.headers(), userRequest).also { user ->
+            users.getData()?.let {
+                users.setData(
+                    it.toMutableList().apply {
+                        this.add(0, user)
+                    }.toList()
+                )
+            }
+        }
     }
 
     fun deleteUser(id: Int) = NetworkResource<Unit>(retrofit) {

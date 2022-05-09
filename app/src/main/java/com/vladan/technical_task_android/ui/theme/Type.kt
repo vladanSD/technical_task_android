@@ -24,6 +24,6 @@ val Typography = Typography(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        color = grayColorEmail
+        color = grayColor
     )
 )

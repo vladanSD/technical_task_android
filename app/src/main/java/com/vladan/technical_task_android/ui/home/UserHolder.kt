@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vladan.technical_task_android.model.User
 
@@ -41,9 +42,9 @@ fun UserHolder(user: User, onLongPress: (User) -> Unit, modifier: Modifier) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 15.dp)
             ) {
-                Text(text = user.name, style = MaterialTheme.typography.body1, maxLines = 1)
+                Text(text = user.name, style = MaterialTheme.typography.body1, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Spacer(modifier = Modifier.size(4.dp))
-                Text(text = user.email, style = MaterialTheme.typography.body2, maxLines = 1)
+                Text(text = user.email, style = MaterialTheme.typography.body2, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
     }
