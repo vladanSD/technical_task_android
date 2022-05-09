@@ -49,7 +49,7 @@ fun Home(
 
     LaunchedEffect(context) {
         vm.toastEvents.collect {
-            Toast.makeText(context, it.asString(context), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, it.asString(context), Toast.LENGTH_LONG).show()
         }
     }
 

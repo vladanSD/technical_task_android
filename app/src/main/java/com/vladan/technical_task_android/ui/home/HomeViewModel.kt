@@ -72,7 +72,6 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
         }
 
         createUser()
-
     }
 
     private fun clearTypedNameAndEmail() {
@@ -93,7 +92,10 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
                 flow.onEach {
                     when (it.status) {
                         Status.SUCCESS -> _uiState.value = _uiState.value.copy(requestInProgress = false)
-                        Status.ERROR -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.ERROR -> {
+                            _uiState.value = _uiState.value.copy(requestInProgress = false)
+                            it.error?.message?.let { _toastChannel.send(UiString.ApiResourceString(it)) }
+                        }
                         Status.LOADING -> _uiState.value = _uiState.value.copy(requestInProgress = true)
                     }
                 }.launchIn(this)
@@ -108,7 +110,26 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
                 flow.onEach {
                     when (it.status) {
                         Status.SUCCESS -> _uiState.value = _uiState.value.copy(requestInProgress = false)
-                        Status.ERROR -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.ERROR -> {
+                            //mapping fields with errors
+                            var nameError: UiString? = null
+                            var emailError: UiString? = null
+                            it.error?.let {
+                                nameError = it.errors.firstOrNull { it.field == "name" }?.let { UiString.ApiResourceString(it.message) }
+                                emailError = it.errors.firstOrNull { it.field == "email" }?.let { UiString.ApiResourceString(it.message) }
+                            }
+
+                            //post the results of error mapping
+                            _uiState.value = _uiState.value.copy(requestInProgress = false, userNameErrorMessage = nameError, userEmailErrorMessage = emailError)
+
+                            //send toast if there is global error message or if there is no any of mapped values
+                            it.error?.message.let { message ->
+                                if (message != null) {
+                                    _toastChannel.send(UiString.ApiResourceString(message))
+                                } else if (!listOf(nameError, emailError).any { it != null }) it.error?.errors?.firstOrNull()
+                                    ?.let { _toastChannel.send(UiString.ApiResourceString("${it.field} ${it.message}")) }
+                            }
+                        }
                         Status.LOADING -> _uiState.value = _uiState.value.copy(requestInProgress = true)
                     }
                 }.launchIn(this)
@@ -123,7 +144,10 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
                 flow.onEach {
                     when (it.status) {
                         Status.SUCCESS -> _uiState.value = _uiState.value.copy(users = it.data ?: emptyList(), requestInProgress = false)
-                        Status.ERROR -> _uiState.value = _uiState.value.copy(requestInProgress = false)
+                        Status.ERROR -> {
+                            _uiState.value = _uiState.value.copy(requestInProgress = false)
+                            it.error?.message?.let { _toastChannel.send(UiString.ApiResourceString(it)) }
+                        }
                         Status.LOADING -> _uiState.value = _uiState.value.copy(requestInProgress = true)
                     }
                 }.launchIn(this)
@@ -144,3 +168,5 @@ sealed class HomeScreenEvent {
 sealed class Validation {
     object Success : Validation()
 }
+
+//TODO erori / unit testovi / internet konekcija / animacija za skrol

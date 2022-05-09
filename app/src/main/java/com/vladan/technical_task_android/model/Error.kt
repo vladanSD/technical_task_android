@@ -5,8 +5,14 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Error(
-    @Json(name = "status_code")
-    val statusCode: Int,
-    @Json(name = "error_message")
-    val errorMessage: String,
+    val errors: List<ErrorField>,
+    val message: String?
+)
+
+@JsonClass(generateAdapter = true)
+data class ErrorField(
+    @Json(name = "field")
+    val field: String,
+    @Json(name = "message")
+    val message: String,
 )
