@@ -43,7 +43,6 @@ fun Home(
         vm.validationEvents.collect {
             if (it is Validation.Success) {
                 createUserDialog.value = false
-                vm.onEvent(HomeScreenEvent.CreateUser)
             }
         }
     }
@@ -89,7 +88,7 @@ fun Home(
         BaseCreateUserDialog(
             onClickNegativeButton = { createUserDialog.value = false },
             onClickPositiveButton = {
-                vm.onEvent(HomeScreenEvent.Validate)
+                vm.onEvent(HomeScreenEvent.ValidateAndCreate)
             },
             onDismissRequest = { createUserDialog.value = false },
             nameValue = state.userName,

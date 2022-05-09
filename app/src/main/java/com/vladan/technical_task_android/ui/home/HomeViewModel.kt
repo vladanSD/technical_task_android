@@ -47,11 +47,8 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
             is HomeScreenEvent.TypeEmail -> {
                 typeEmail(event.value)
             }
-            is HomeScreenEvent.Validate -> {
+            is HomeScreenEvent.ValidateAndCreate -> {
                 validate()
-            }
-            HomeScreenEvent.CreateUser -> {
-                createUser()
             }
             HomeScreenEvent.ClearTypedNameAndEmail -> {
                 clearTypedNameAndEmail()
@@ -73,6 +70,8 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
         viewModelScope.launch {
             _validationEventChannel.send(Validation.Success)
         }
+
+        createUser()
 
     }
 
@@ -139,8 +138,7 @@ sealed class HomeScreenEvent {
     data class TypeName(val value: String) : HomeScreenEvent()
     data class TypeEmail(val value: String) : HomeScreenEvent()
     object ClearTypedNameAndEmail : HomeScreenEvent()
-    object Validate : HomeScreenEvent()
-    object CreateUser : HomeScreenEvent()
+    object ValidateAndCreate : HomeScreenEvent()
 }
 
 sealed class Validation {
