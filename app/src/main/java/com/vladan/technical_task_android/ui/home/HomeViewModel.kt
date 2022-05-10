@@ -57,8 +57,11 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
     }
 
     private fun validate() {
-        val nameResult = validateName.execute(_uiState.value.userName)
-        val emailResult = validateEmail.execute(_uiState.value.userEmail)
+        val name = _uiState.value.userName
+        val email = _uiState.value.userEmail
+
+        val nameResult = validateName.execute(name)
+        val emailResult = validateEmail.execute(email)
 
         listOf(nameResult, emailResult).any { !it.successful }.let {
             if (it) {
@@ -67,7 +70,7 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
             }
         }
 
-        createUser()
+        createUser(name, email)
     }
 
     private fun clearTypedNameAndEmail() {
@@ -100,8 +103,8 @@ class HomeViewModel @Inject constructor(private val userRepository: UserReposito
         }
     }
 
-    private fun createUser() {
-        userRepository.createUser(UserRequest(_uiState.value.userName, _uiState.value.userEmail)).apply {
+    private fun createUser(name: String, email: String) {
+        userRepository.createUser(UserRequest(name, email)).apply {
             viewModelScope.launch {
                 flow.onEach {
                     when (it.status) {
